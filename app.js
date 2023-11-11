@@ -35,22 +35,47 @@
 
 // );
 
-const express = require("express");
+// const express = require("express");
+// require("dotenv").config();
+// const courseRoute = require('./routes/courseroute');
+// const userRoute = require("./routes/userroute");
+// const { default: mongoose } = require("mongoose");
+
+// //jab apke pass fix route bhi ho dynamic route bhi tuo app fix route dynamic route se pehle rhkein gy
+// const App = express()
+
+// App.use(express.json());
+// App.use("/course",courseRoute);
+// App.use("/user",userRoute);
+
+
+// mongoose.connect(process.env.DATABASE).then(()=>{
+//     App.listen(process.env.PORT, () => {
+//         console.log(`server is listening http://localhost:${process.env.PORT}`)
+//     });
+// })
+
 require("dotenv").config();
-const courseRoute = require('./routes/courseroute');
-const userRoute = require("./routes/userroute");
-const { default: mongoose } = require("mongoose");
+const express = require("express");
+const mongoose = require("mongoose");
+const courseRoute = require("./routes/courseroute");
+const authRoute = require("./routes/authroute");
 
-//jab apke pass fix route bhi ho dynamic route bhi tuo app fix route dynamic route se pehle rhkein gy
-const App = express()
-
+const App = express();
 App.use(express.json());
-App.use("/course",courseRoute);
-App.use("/user",userRoute);
 
+App.use("/course", courseRoute);
+App.use("/auth", authRoute);
 
-mongoose.connect(process.env.DATABASE).then(()=>{
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
     App.listen(process.env.PORT, () => {
-        console.log(`server is listening http://localhost:${process.env.PORT}`)
+      console.log(
+        `Database Connected and server is listening http://localhost:${process.env.PORT}`
+      );
     });
-})
+  })
+  .catch((err) => {
+    console.log("err", err);
+  });
